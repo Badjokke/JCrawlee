@@ -1,3 +1,7 @@
+package crawler;
+
+import constants.Constants;
+import crawler.Crawler;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
@@ -9,6 +13,8 @@ import edu.uci.ics.crawler4j.parser.NotAllowedContentException;
 import edu.uci.ics.crawler4j.parser.ParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 import edu.uci.ics.crawler4j.parser.Parser;
+import io.IOManager;
+import io.JSONBuilder;
 import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,12 +24,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Worker thread for crawling
- * This class asks Crawler for url address and then proceeds to parse it with xPath expressions
- * at the end of run method, workers adds page into Crawler parsedQueue
+ * This class asks crawler.Crawler for url address and then proceeds to parse it with xPath expressions
+ * at the end of run method, workers adds page into crawler.Crawler parsedQueue
  */
 public class ParserWorker extends Thread {
     private List<String> xpathExpressions;
@@ -116,7 +121,6 @@ public class ParserWorker extends Thread {
     }
 
     private Page parse(String url) {
-        Log.log(Level.INFO, "Parsing url: " + url);
         WebURL curURL = new WebURL();
         curURL.setURL(url);
         Page page = null;

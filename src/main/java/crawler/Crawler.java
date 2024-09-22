@@ -1,3 +1,5 @@
+package crawler;
+
 import java.util.*;
 import java.util.logging.Level;
 
@@ -29,8 +31,6 @@ public class Crawler {
         this.urls = new HashSet<>();
         this.nestedUrls = new HashSet<>();
         this.allVisitedUrls = new HashSet<>();
-        articleNumber = IOManager.getArticleCount()+1;
-        CrawlerUtil.loadConfigFile();
     }
     public String getRootPage(){
         return this.rootPage;
@@ -42,12 +42,7 @@ public class Crawler {
      * and creates storage folders if they dont exists
      */
     public void crawlSeedPage(){
-        CrawlerUtil.setIsActive(true);
-        Log.log(Level.INFO,"Crawler starting at page: "+ this.subCategoryPage);
         run();
-        CrawlerUtil.setIsActive(false);
-        Log.log(Level.INFO,"Crawling finished");
-
     }
 
 
@@ -149,7 +144,6 @@ public class Crawler {
     //necessary evil - first we need to fetch all urls we will later parse
     //only one thread is used for this job
     private void fetchAllUrls(){
-        Log.log(Level.INFO,"Adding seed pages to queue.");
         List<String> xpaths = new ArrayList<>();
         xpaths.add("//nav[@class='sc-44f1f005-1 cexzQM']/ul/li/div/a/@href");
         ParserWorker urlParser = new ParserWorker(this,xpaths,0);
@@ -183,20 +177,6 @@ public class Crawler {
     }
 
 
-    /**
-     * Retrieve crawling properties from CrawlerUtil class
-     * which parsed the config.json file for crawler
-     * ie get politeness interval, seed page, xpaths, ...
-     */
-    public void config(){
-        this.politenessInterval = CrawlerUtil.getPoliteness();
-        this.crawlingDepth =CrawlerUtil.getCrawlingDepth();
-        this.xPaths = CrawlerUtil.getXPaths();
-        this.rootPage = CrawlerUtil.getRootPage();
-        this.subCategoryPage = CrawlerUtil.getPageSubcategory();
-
-
-    }
 
 
 
