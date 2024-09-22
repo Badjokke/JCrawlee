@@ -1,7 +1,8 @@
 package crawler;
 
+import model.WebScraperConfig;
+
 import java.util.*;
-import java.util.logging.Level;
 
 public class Crawler {
     /**
@@ -12,27 +13,29 @@ public class Crawler {
     //urls we scrape from the article for additional context information
     private Set<String> nestedUrls;
 
-    private Set<String> allVisitedUrls;
+    private Set<String> visitedUrls;
 
     /**
      * initialized from config file
      * if config is not loaded, the crawler will not work
      */
     private int politenessInterval;
-    private int crawlingDepth;
-    private List<String> xPaths;
+    private Map<String, String> xPaths;
     private String rootPage;
-    private String subCategoryPage;
     private Iterator<String> iterator;
     private int articleNumber;
 
-    public Crawler(int parserWorkerPool){
-        this.parserWorkerWorkers = new ParserWorker[parserWorkerPool];
+
+    public Crawler(WebScraperConfig config) {
+        this.parserWorkerWorkers = new ParserWorker[config.getWorkerCount()];
         this.urls = new HashSet<>();
-        this.nestedUrls = new HashSet<>();
-        this.allVisitedUrls = new HashSet<>();
+        this.xPaths = config.getXpaths();
+        this.rootPage = config.getRootPage();
+        this.politenessInterval = config.getPoliteness();
+        this.visitedUrls = new HashSet<>();
     }
-    public String getRootPage(){
+
+    public String getRootPage() {
         return this.rootPage;
     }
 
@@ -41,35 +44,15 @@ public class Crawler {
      * crawls BBC articles
      * and creates storage folders if they dont exists
      */
-    public void crawlSeedPage(){
+    public void crawlSeedPage() {
         run();
     }
 
-
-    /**
-     * Second access to crawling utility, crawls only the given url
-     * @param url
-     */
-    public boolean crawl(String url){
-        ParserWorker worker = new ParserWorker(this,xPaths,politenessInterval);
-        addUrlToQueue(url);
-        iterator = this.urls.iterator();
-        worker.start();
-        try{
-            worker.join();
-        }
-        catch (InterruptedException e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-
-    }
-    public int getCurrentArticleId(){
+    public int getCurrentArticleId() {
         return this.articleNumber;
     }
 
-    public synchronized int getArticleNumber(){
+    public synchronized int getArticleNumber() {
         return this.articleNumber++;
     }
 
@@ -81,47 +64,42 @@ public class Crawler {
         fetchAllUrls();
         //init pool and run the threads
 
-        for (int i = 0; i < crawlingDepth; i++) {
-            this.nestedUrls = new HashSet<>();
-            iterator = this.urls.iterator();
-            for(int j = 0; j < this.parserWorkerWorkers.length; j++){
-                this.parserWorkerWorkers[j] = new ParserWorker(this, xPaths, politenessInterval);
-                parserWorkerWorkers[j].start();
+        iterator = this.urls.iterator();
+        for (int j = 0; j < this.parserWorkerWorkers.length; j++) {
+            this.parserWorkerWorkers[j] = new ParserWorker(this, xPaths, politenessInterval);
+            parserWorkerWorkers[j].start();
+        }
+        for (int j = 0; j < this.parserWorkerWorkers.length; j++) {
+            try {
+                this.parserWorkerWorkers[j].join();
+            } catch (InterruptedException exception) {
+                exception.printStackTrace();
             }
-            //wakeUpWorkers();
-            for (int j = 0; j < this.parserWorkerWorkers.length; j++) {
-                try{
-                    this.parserWorkerWorkers[j].join();
-                }
-                catch (InterruptedException exception){
-                    exception.printStackTrace();
-                }
-            }
-            this.urls = this.nestedUrls;
         }
     }
 
 
     /**
      * Adds url to set of urls we will process
+     *
      * @param url url of a page we want to parse
      */
-    public void addUrlToQueue(String url){
-        if(this.allVisitedUrls.contains(url))
+    public void addUrlToQueue(String url) {
+        if (this.visitedUrls.contains(url))
             return;
-        this.allVisitedUrls.add(url);
+        this.visitedUrls.add(url);
 
-        if(!url.contains(rootPage))
+        if (!url.contains(rootPage))
             url = rootPage + url;
 
         this.urls.add(url);
 
     }
 
-    public synchronized void addUrlToNestedQueue(String url){
-        if(this.allVisitedUrls.contains(url))return;
-        this.allVisitedUrls.add(url);
-        if(!url.contains(rootPage))
+    public synchronized void addUrlToNestedQueue(String url) {
+        if (this.visitedUrls.contains(url)) return;
+        this.visitedUrls.add(url);
+        if (!url.contains(rootPage))
             url = rootPage + url;
 
         this.nestedUrls.add(url);
@@ -129,13 +107,8 @@ public class Crawler {
 
 
     //give url to worker
-    public synchronized String getUrl(){
-        //data structure is not yet initialized but worker is trying to access it block him
-        /*if(this.iterator == null){
-            System.out.println("Vlakno waiti");
-            blockWorker();
-        }*/
-        if(iterator.hasNext())
+    public synchronized String getUrl() {
+        if (iterator.hasNext())
             return iterator.next();
         return null;
     }
@@ -143,8 +116,9 @@ public class Crawler {
 
     //necessary evil - first we need to fetch all urls we will later parse
     //only one thread is used for this job
-    private void fetchAllUrls(){
-        List<String> xpaths = new ArrayList<>();
+    private void fetchAllUrls() {
+        addUrlToQueue(this.rootPage);
+        /*List<String> xpaths = new ArrayList<>();
         xpaths.add("//nav[@class='sc-44f1f005-1 cexzQM']/ul/li/div/a/@href");
         ParserWorker urlParser = new ParserWorker(this,xpaths,0);
         //extract all seed pages from given page subcategory
@@ -158,9 +132,9 @@ public class Crawler {
         urlParser.setXPaths(xpaths);
 
         for(String seedUrl : seedUrls){
-            if(this.allVisitedUrls.contains(seedUrl))
+            if(this.visitedUrls.contains(seedUrl))
                 continue;
-            allVisitedUrls.add(seedUrl);
+            visitedUrls.add(seedUrl);
             if(!seedUrl.contains(rootPage))
                 seedUrl = rootPage + seedUrl;
 
@@ -171,13 +145,10 @@ public class Crawler {
                 addUrlToQueue(articleUrl);
 
             }
-        }
+        }*/
 
 
     }
-
-
-
 
 
 }

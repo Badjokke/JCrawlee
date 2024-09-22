@@ -1,7 +1,5 @@
 package crawler;
 
-import constants.Constants;
-import crawler.Crawler;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
@@ -11,10 +9,8 @@ import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.parser.NotAllowedContentException;
 import edu.uci.ics.crawler4j.parser.ParseData;
-import edu.uci.ics.crawler4j.url.WebURL;
 import edu.uci.ics.crawler4j.parser.Parser;
-import io.IOManager;
-import io.JSONBuilder;
+import edu.uci.ics.crawler4j.url.WebURL;
 import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,8 +18,8 @@ import us.codecraft.xsoup.Xsoup;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Worker thread for crawling
@@ -31,14 +27,13 @@ import java.util.List;
  * at the end of run method, workers adds page into crawler.Crawler parsedQueue
  */
 public class ParserWorker extends Thread {
-    private List<String> xpathExpressions;
+    private Map<String, String> xpathExpressions;
     private final Crawler manager;
     private final int politenessInterval;
     private final PageFetcher pageFetcher;
     private final Parser parser;
-    private final JSONBuilder jsonBuilder;
 
-    public ParserWorker(Crawler manager, List<String> xpathExpressions, int politenessInterval) {
+    public ParserWorker(Crawler manager, Map<String, String> xpathExpressions, int politenessInterval) {
         this.manager = manager;
         this.xpathExpressions = xpathExpressions;
         this.politenessInterval = politenessInterval;
@@ -46,7 +41,6 @@ public class ParserWorker extends Thread {
         CrawlConfig config = new CrawlConfig();
         this.pageFetcher = new PageFetcher(config);
         this.parser = new Parser(config);
-        this.jsonBuilder = new JSONBuilder();
         config.setMaxDepthOfCrawling(0);
         config.setResumableCrawling(false);
     }
@@ -62,63 +56,16 @@ public class ParserWorker extends Thread {
             if (p == null) continue;
             List<List<String>> parsedData = evalPage(p);
             processArticle(parsedData);
-            /*
-            try {
-                Thread.sleep(politenessInterval);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Log.log(Level.SEVERE, "Parser worker thread sleep exception.");
-            }
-            */
 
         }
     }
 
 
     private void processArticle(List<List<String>> parsedData) {
-        List<String> titles = parsedData.get(0);
-        List<String> authors = parsedData.get(1);
-        List<String> content = parsedData.get(2);
-        List<String> relatedArticles = parsedData.get(3);
-        for (String url : relatedArticles)
-            this.manager.addUrlToNestedQueue(url);
-        //something failed in parsing the article (timeout or something like that)
-        if (content.size() == 0 || titles.size() == 0)
-            return;
-        createBBCJSONFile(titles, authors, content);
 
 
     }
 
-    private String buildStringFromList(List<String> l) {
-        String result = "";
-        StringBuilder sb = new StringBuilder();
-        for (String t : l) {
-            sb.append(t.replace("\n", ""));
-        }
-        result = sb.toString();
-        return result;
-    }
-
-
-    private void createBBCJSONFile(List<String> titles, List<String> authors, List<String> content) {
-        String title = buildStringFromList(titles);
-        String author = buildStringFromList(authors);
-        String text = buildStringFromList(content);
-        HashMap<String, Object> json = new HashMap<>();
-        json.put("title", title);
-        json.put("author", author);
-        json.put("content", text);
-
-
-        String jsonString = this.jsonBuilder.buildJSON(json);
-        try {
-            IOManager.writeJSONfile(jsonString, Constants.crawlerFileStorage + "/article_" + manager.getArticleNumber() + ".json");
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-
-    }
 
     private Page parse(String url) {
         WebURL curURL = new WebURL();
@@ -156,28 +103,14 @@ public class ParserWorker extends Thread {
             if (parseData instanceof HtmlParseData) {
 
                 Document document = Jsoup.parse(((HtmlParseData) parseData).getHtml());
-                for (String xpathExpression : this.xpathExpressions) {
-                    List<String> xlist = Xsoup.compile(xpathExpression).evaluate(document).list();
+                for (String attribute : this.xpathExpressions.keySet()) {
+                    String xPathExpression = this.xpathExpressions.get(attribute);
+                    List<String> xlist = Xsoup.compile(xPathExpression).evaluate(document).list();
                     data.add(xlist);
                 }
             }
         }
         return data;
-    }
-
-
-    public List<List<String>> crawlUrls(String url) {
-        List<List<String>> urls = null;
-        Page page = parse(url);
-        //failed to parse resource at @param url
-        if (page == null) return urls;
-        urls = evalPage(page);
-        return urls;
-    }
-
-
-    public void setXPaths(List<String> xPaths) {
-        this.xpathExpressions = xPaths;
     }
 
 
