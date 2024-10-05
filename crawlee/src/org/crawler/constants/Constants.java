@@ -1,4 +1,4 @@
-package constants;
+package org.crawler.constants;
 
 public class Constants {
 

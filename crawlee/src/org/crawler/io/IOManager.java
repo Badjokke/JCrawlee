@@ -1,6 +1,6 @@
-package io;
+package org.crawler.io;
 
-import constants.Constants;
+import org.crawler.constants.Constants;
 import java.io.*;
 
 //class responsible for I/O operations

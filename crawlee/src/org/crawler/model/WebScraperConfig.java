@@ -1,4 +1,4 @@
-package model;
+package org.crawler.model;
 
 import java.util.Map;
 

@@ -1,9 +1,9 @@
-package crawler.util;
+package org.crawler.util;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import crawler.Crawler;
-import model.WebScraperConfig;
+import org.crawler.Crawler;
+import org.crawler.model.WebScraperConfig;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class CrawlerUtil {
     }
 
     public static Crawler[] loadCrawlers(String configFilePath) {
-        WebScraperConfig[] configs = null;
+        WebScraperConfig[] configs;
         try (FileReader fReader = new FileReader(configFilePath)) {
             configs = new Gson().fromJson(new JsonReader(fReader), WebScraperConfig[].class);
         } catch (IOException e) {

@@ -1,6 +1,6 @@
-package crawler;
+package org.crawler;
 
-import model.WebScraperConfig;
+import org.crawler.model.WebScraperConfig;
 
 import java.util.*;
 
@@ -8,7 +8,7 @@ public class Crawler {
     /**
      * initialized in constructor
      */
-    private ParserWorker[] parserWorkerWorkers;
+    //private ParserWorker[] parserWorkerWorkers;
     private Set<String> urls;
     //urls we scrape from the article for additional context information
     private Set<String> nestedUrls;
@@ -27,7 +27,7 @@ public class Crawler {
 
 
     public Crawler(WebScraperConfig config) {
-        this.parserWorkerWorkers = new ParserWorker[config.getWorkerCount()];
+        //this.parserWorkerWorkers = new ParserWorker[config.getWorkerCount()];
         this.urls = new HashSet<>();
         this.xPaths = config.getXpaths();
         this.rootPage = config.getRootPage();
@@ -64,18 +64,7 @@ public class Crawler {
         fetchAllUrls();
         //init pool and run the threads
 
-        iterator = this.urls.iterator();
-        for (int j = 0; j < this.parserWorkerWorkers.length; j++) {
-            this.parserWorkerWorkers[j] = new ParserWorker(this, xPaths, politenessInterval);
-            parserWorkerWorkers[j].start();
-        }
-        for (int j = 0; j < this.parserWorkerWorkers.length; j++) {
-            try {
-                this.parserWorkerWorkers[j].join();
-            } catch (InterruptedException exception) {
-                exception.printStackTrace();
-            }
-        }
+
     }
 
 
