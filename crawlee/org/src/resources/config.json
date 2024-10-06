@@ -11,7 +11,7 @@
       "area (m2)": "//article//p[@class='ssrcss-1q0x1qg-Paragraph eq5iqo00']",
       "balcony (m2)": "//article//section//a[starts-with(@href,'/news')]",
       "price (CZK)": "price",
-      "plan (URL)": "plan"
+      "plan (URL)": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//a"
     }
   }
 ]
