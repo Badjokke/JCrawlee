@@ -1,9 +1,9 @@
-package org.crawler.util;
+package org.src.crawler.util;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import org.crawler.Crawler;
-import org.crawler.model.WebScraperConfig;
+import org.src.crawler.Crawler;
+import org.src.crawler.model.WebScraperConfig;
 
 import java.io.FileReader;
 import java.io.IOException;
