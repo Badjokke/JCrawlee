@@ -1,7 +1,11 @@
 package org.src.crawler;
 
+import org.src.crawler.io.IOManager;
+import org.src.crawler.mapper.ScrapedDocumentMapper;
+import org.src.crawler.mapper.impl.ScrapedDocumentMapperImpl;
 import org.src.crawler.model.ScrapedDocument;
 import org.src.crawler.model.WebScraperConfig;
+import org.src.crawler.model.export.ExportDocument;
 import org.src.crawler.worker.CrawlerWorker;
 
 import java.util.*;
@@ -18,7 +22,7 @@ public class Crawler {
     private final CrawlerWorker[] crawlerWorkers;
     private final List<String> urls;
 
-
+    private final ScrapedDocumentMapper mapper;
     private Set<String> visitedUrls;
 
     /**
@@ -41,6 +45,7 @@ public class Crawler {
         this.rootPage = config.getRootPage();
         this.politenessInterval = config.getPoliteness();
         this.visitedUrls = new HashSet<>();
+        this.mapper = new ScrapedDocumentMapperImpl();
     }
 
     public String getRootPage() {
@@ -55,15 +60,14 @@ public class Crawler {
         log.info(String.format("Starting crawler on root page: %s with worker count: %d\n.", rootPage, config.getWorkerCount()));
         addUrlToQueue(rootPage);
         log.finest("Starting workers.");
-        for(int i = 0; i < config.getWorkerCount(); i++){
-            crawlerWorkers[i] = new CrawlerWorker(xPaths, this::getUrl,this::addUrlToQueue, this::saveParsedDocument);
+        for (int i = 0; i < config.getWorkerCount(); i++) {
+            crawlerWorkers[i] = new CrawlerWorker(xPaths, this::getUrl, this::addUrlToQueue, this::saveParsedDocument);
             crawlerWorkers[i].start();
         }
-        for(int i = 0; i < config.getWorkerCount(); i++){
+        for (int i = 0; i < config.getWorkerCount(); i++) {
             try {
                 crawlerWorkers[i].join();
-            }
-            catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 log.warning("Interrupt exception while waiting for workers to finish! %s");
                 e.printStackTrace();
             }
@@ -77,14 +81,12 @@ public class Crawler {
      * @param url url of a page we want to parse
      */
     public synchronized void addUrlToQueue(String url) {
-        if (this.visitedUrls.contains(url)){
+        if (this.visitedUrls.contains(url)) {
             log.info(String.format("Url: %s already visited, skipping.", url));
             return;
         }
         this.visitedUrls.add(url);
 
-        if (!url.startsWith(rootPage))
-            url = rootPage + url;
         log.info(String.format("Adding url: %s to queue", url));
         this.urls.add(url);
         notify();
@@ -93,11 +95,10 @@ public class Crawler {
 
     //give url to worker
     public synchronized String getUrl() {
-        while(urlIndex == urls.size()){
-            try{
+        while (urlIndex == urls.size()) {
+            try {
                 wait();
-            }
-            catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 log.warning("Interrupted exception in worker thread!");
                 e.printStackTrace();
             }
@@ -108,12 +109,10 @@ public class Crawler {
     }
 
 
-
-
-
-    public synchronized void saveParsedDocument(ScrapedDocument scrapedDocument){
+    public synchronized void saveParsedDocument(ScrapedDocument scrapedDocument) {
         log.info(String.format("Saving document with content: %s", scrapedDocument.getContent().toString()));
-        System.out.println(scrapedDocument);
+        ExportDocument exportDocument = mapper.scrapedDocumentToCsvExportDocument(scrapedDocument);
+        IOManager.writeFile(String.format("%s.%s",exportDocument.getFilename(),exportDocument.getFileExtension()),exportDocument.getContent());
     }
 
 

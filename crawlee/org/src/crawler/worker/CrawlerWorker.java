@@ -38,15 +38,18 @@ public class CrawlerWorker extends Thread {
 
     @Override
     public void run() {
-        String url = urlSupplier.get();
-        log.info(String.format("Worker: %d parsing url: %s", Thread.currentThread().threadId(), url));
-        try {
-            Document document = Jsoup.connect(url).get();
-            documentConsumer.accept(parseDocument(document));
-        } catch (IOException e) {
-            log.warning(String.format("IO exception when parsing url: %s\n message: %s", url, e.getMessage()));
-            e.printStackTrace();
+        while (true) {
+            String url = urlSupplier.get();
+            log.info(String.format("Worker: %d parsing url: %s", Thread.currentThread().threadId(), url));
+            try {
+                Document document = Jsoup.connect(url).get();
+                documentConsumer.accept(parseDocument(document));
+            } catch (IOException e) {
+                log.warning(String.format("IO exception when parsing url: %s\n message: %s", url, e.getMessage()));
+                e.printStackTrace();
+            }
         }
+
 
     }
 

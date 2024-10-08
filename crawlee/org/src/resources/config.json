@@ -1,7 +1,7 @@
 [
   {
     "politeness": "1500",
-    "rootPage": "https://www.finep.cz/cs/vyhledavani",
+    "rootPage": "https://www.finep.cz/cs/vyhledavani?page=1",
     "workerCount": 1,
     "xpaths": {
       "traverse_expression": "//ul[@class='pagination']/li/a",
