@@ -1,17 +1,18 @@
 [
   {
     "politeness": "1500",
-    "rootPage": "https://www.finep.cz/cs/vyhledavani",
+    "rootPage": "https://www.finep.cz/cs/vyhledavani?page=1",
     "workerCount": 1,
     "xpaths": {
       "traverse_expression": "//ul[@class='pagination']/li/a",
       "flat_number": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-6']/strong",
-      "address": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-6']",
-      "room_type": "//div[@class='ssrcss-1u2in0b-Container-ContributorDetails e8mq1e913']/div[1]",
-      "area (m2)": "//article//p[@class='ssrcss-1q0x1qg-Paragraph eq5iqo00']",
-      "balcony (m2)": "//article//section//a[starts-with(@href,'/news')]",
-      "price (CZK)": "price",
-      "plan (URL)": "plan"
+      "address": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-6'][not(starts-with(name(*[1]), 'strong'))]",
+      "room_type": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-3']/strong",
+      "area (m2)": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-3']/div/strong",
+      "balcony (m2)": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-6 m-12 s-12 xs-12']/div[@class='accessories']",
+      "under construction": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-6 m-10 s-10 xs-10']//ul/li",
+      "price (CZK)": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-6 m-10 s-10 xs-10']//div/strong",
+      "plan (URL)": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//a"
     }
   }
 ]

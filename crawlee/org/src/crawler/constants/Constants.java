@@ -8,9 +8,11 @@ public class Constants {
 
     private Constants(){}
 
+    public static final String traversalXpathKeyword = "traverse_expression";
+
     public static final String storageRoot = "./storage";
     public static final String crawlerFileStorage = storageRoot + "./document_cache";
-    public static final Set<String> xPathKeywords = new HashSet<>(List.of("traverse_expression"));
+    public static final Set<String> xPathKeywords = new HashSet<>(List.of(traversalXpathKeyword));
     public static final String crawlerConfigPath = "crawlee/org/src/resources/config.json";
 
 }

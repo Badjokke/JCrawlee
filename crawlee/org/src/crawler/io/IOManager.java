@@ -1,10 +1,15 @@
 package org.src.crawler.io;
 
 import org.src.crawler.constants.Constants;
-import java.io.*;
 
-//class responsible for I/O operations
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Logger;
+
 public class IOManager {
+    private static final Logger log = Logger.getLogger(IOManager.class.getSimpleName());
 
     public IOManager() {
         //no instances
@@ -15,37 +20,42 @@ public class IOManager {
      * @return true if file was created
      */
     public static boolean createDocumentStorage(boolean rewrite) {
-        boolean fileCreated = false;
+        log.info("Creating document storage2");
         try {
-            fileCreated = createFile(rewrite, Constants.crawlerFileStorage);
+            return createFile(rewrite, Constants.storageRoot);
         } catch (IOException exception) {
+            log.warning(String.format("Failed to create document storage: %s", exception.getMessage()));
             exception.printStackTrace();
             return false;
         }
-        return fileCreated;
     }
-
-    public static boolean writeJSONfile(String content, String path) throws IOException {
-        //createFile(true,path);
-        FileWriter file = new FileWriter(path);
-        file.write(content);
-        file.flush();
-        file.close();
-        return true;
-    }
-
 
     private static boolean createFile(boolean rewrite, String path) throws IOException {
         File rootStorage = new File(path);
-        boolean fileCreated = true;
+        log.info(String.format("Creating file: %s\n Override: %s", rootStorage.getAbsoluteFile(), rewrite));
         if (!rootStorage.exists() || rewrite) {
-            //Global.logger.log(Level.INFO,"Creating file: "+path+" on filesystem.");
-            fileCreated = rootStorage.mkdir();
-            if (!fileCreated) {
-                //Log.log(Level.SEVERE,"Failed to create file "+ path);
+            if (!rootStorage.mkdir()) {
+                log.warning(String.format("mkdir with arg: %s failed", rootStorage.getPath()));
+                return false;
             }
         }
-        return fileCreated;
+        return true;
+    }
+
+    public static boolean writeFile(String path, byte[] content){
+        File file = new File(Constants.storageRoot+"/"+path);
+        if(file.exists()){
+            log.fine(String.format("File: %s already exists and will be overwritten.", path));
+        }
+        try(FileOutputStream outputStream = new FileOutputStream(file,false)){
+            outputStream.write(content);
+        }
+        catch (IOException e){
+            log.warning(String.format("Unable to write file: %s.\n Reason: %s", file.getAbsoluteFile(), e.getMessage()));
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 
