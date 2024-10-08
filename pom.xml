@@ -11,6 +11,9 @@
         <java.version>21</java.version>
         <jsoup.version>1.18.1</jsoup.version>
         <gson.version>2.10.1</gson.version>
+        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <source-directory>crawlee</source-directory>
     </properties>
 
     <dependencies>
@@ -29,19 +32,31 @@
 
         </dependencies>
     <build>
+        <sourceDirectory>${source-directory}</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>${source-directory}/org/src/resources</directory> <!-- Custom resources directory -->
+                <includes>
+                    <include>**/*</include> <!-- Include all files under my-resources -->
+                </includes>
+                <targetPath>org/src/resources</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>crawlee/org/src/FancyCrawly</mainClass>
+                            <mainClass>org.src.FancyCrawly</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <appendAssemblyId>false</appendAssemblyId>
+
                 </configuration>
                 <executions>
                     <execution>
@@ -56,9 +71,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>19</source>
-                    <target>19</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>
