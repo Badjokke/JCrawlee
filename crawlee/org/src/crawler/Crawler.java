@@ -107,7 +107,12 @@ public class Crawler {
         return availableUrl;
     }
 
+
+
+
+
     public synchronized void saveParsedDocument(ScrapedDocument scrapedDocument){
+        log.info(String.format("Saving document with content: %s", scrapedDocument.getContent().toString()));
         System.out.println(scrapedDocument);
     }
 
