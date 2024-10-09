@@ -9,10 +9,12 @@ import org.src.crawler.model.export.ExportDocument;
 import org.src.crawler.worker.CrawlerWorker;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class Crawler {
-
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private static final Logger log = Logger.getLogger(Crawler.class.getCanonicalName());
 
 
@@ -35,6 +37,7 @@ public class Crawler {
     private int urlIndex;
     private final WebScraperConfig config;
 
+    private int waitingWorkers = 0;
 
     public Crawler(WebScraperConfig config) {
         this.config = config;
@@ -47,11 +50,6 @@ public class Crawler {
         this.visitedUrls = new HashSet<>();
         this.mapper = new ScrapedDocumentMapperImpl();
     }
-
-    public String getRootPage() {
-        return this.rootPage;
-    }
-
 
     /**
      * initialization of pools and starting the threads
@@ -89,13 +87,18 @@ public class Crawler {
 
         log.info(String.format("Adding url: %s to queue", url));
         this.urls.add(url);
-        notify();
+        notifyAll();
     }
 
 
     //give url to worker
     public synchronized String getUrl() {
+        waitingWorkers++;
         while (urlIndex == urls.size()) {
+            if (waitingWorkers == crawlerWorkers.length) {
+                notifyAll();
+                return null;
+            }
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -104,6 +107,7 @@ public class Crawler {
             }
         }
         String availableUrl = urls.get(urlIndex);
+        waitingWorkers--;
         urlIndex++;
         return availableUrl;
     }
@@ -112,7 +116,7 @@ public class Crawler {
     public synchronized void saveParsedDocument(ScrapedDocument scrapedDocument) {
         log.info(String.format("Saving document with content: %s", scrapedDocument.getContent().toString()));
         ExportDocument exportDocument = mapper.scrapedDocumentToCsvExportDocument(scrapedDocument);
-        IOManager.writeFile(String.format("%s.%s",exportDocument.getFilename(),exportDocument.getFileExtension()),exportDocument.getContent());
+        executorService.submit(() -> IOManager.writeFile(String.format("%s.%s", exportDocument.getFilename(), exportDocument.getFileExtension()), exportDocument.getContent()));
     }
 
 
