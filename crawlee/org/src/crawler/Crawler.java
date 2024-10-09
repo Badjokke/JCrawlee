@@ -9,12 +9,10 @@ import org.src.crawler.model.export.ExportDocument;
 import org.src.crawler.worker.CrawlerWorker;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 import java.util.logging.Logger;
 
 public class Crawler {
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private static final Logger log = Logger.getLogger(Crawler.class.getCanonicalName());
 
 
@@ -116,7 +114,9 @@ public class Crawler {
     public synchronized void saveParsedDocument(ScrapedDocument scrapedDocument) {
         log.info(String.format("Saving document with content: %s", scrapedDocument.getContent().toString()));
         ExportDocument exportDocument = mapper.scrapedDocumentToCsvExportDocument(scrapedDocument);
-        executorService.submit(() -> IOManager.writeFile(String.format("%s.%s", exportDocument.getFilename(), exportDocument.getFileExtension()), exportDocument.getContent()));
+
+        FutureTask<Boolean> task = new FutureTask<>(() -> IOManager.writeFile(String.format("%s.%s", exportDocument.getFilename(), exportDocument.getFileExtension()), exportDocument.getContent()));
+        task.run();
     }
 
 
