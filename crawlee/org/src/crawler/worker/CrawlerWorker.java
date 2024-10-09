@@ -40,9 +40,13 @@ public class CrawlerWorker extends Thread {
     public void run() {
         while (true) {
             String url = urlSupplier.get();
+            if (url == null){
+                break;
+            }
             log.info(String.format("Worker: %d parsing url: %s", Thread.currentThread().threadId(), url));
             try {
                 Document document = Jsoup.connect(url).get();
+                extractTraversalUrls(document);
                 documentConsumer.accept(parseDocument(document));
             } catch (IOException e) {
                 log.warning(String.format("IO exception when parsing url: %s\n message: %s", url, e.getMessage()));
@@ -54,7 +58,6 @@ public class CrawlerWorker extends Thread {
     }
 
     private ScrapedDocument parseDocument(Document document) {
-        extractTraversalUrls(document);
         Map<String, List<String>> content = new HashMap<>();
         for (String xPathExpression : keys) {
             Elements elements = document.selectXpath(this.xPaths.get(xPathExpression));
