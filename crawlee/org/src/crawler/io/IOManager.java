@@ -4,7 +4,6 @@ import org.src.crawler.constants.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -42,15 +41,23 @@ public class IOManager {
         return true;
     }
 
-    public static boolean writeFile(String path, byte[] content){
-        File file = new File(Constants.storageRoot+"/"+path);
-        if(file.exists()){
+    public static boolean writeFile(String path, byte[] content, String subDirectory) {
+        String storage = subDirectory == null ? Constants.storageRoot : Constants.storageRoot + "/" + subDirectory;
+        File storageFile = new File(storage);
+        if (!storageFile.exists()) {
+            boolean mkdir = storageFile.mkdirs();
+            if (!mkdir) {
+                log.warning(String.format("Failed to create storage at path: %s!", storageFile.getAbsolutePath()));
+                return false;
+            }
+        }
+        File file = new File(storage + "/" + path);
+        if (file.exists()) {
             log.fine(String.format("File: %s already exists and will be overwritten.", path));
         }
-        try(FileOutputStream outputStream = new FileOutputStream(file,false)){
+        try (FileOutputStream outputStream = new FileOutputStream(file, false)) {
             outputStream.write(content);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             log.warning(String.format("Unable to write file: %s.\n Reason: %s", file.getAbsoluteFile(), e.getMessage()));
             e.printStackTrace();
             return false;

@@ -46,7 +46,7 @@ public class Crawler {
         this.rootPage = config.getRootPage();
         this.politenessInterval = config.getPoliteness();
         this.visitedUrls = new HashSet<>();
-        this.mapper = new ScrapedDocumentMapperImpl();
+        this.mapper = new ScrapedDocumentMapperImpl(config.getOutputFilePrefix());
     }
 
     /**
@@ -115,7 +115,7 @@ public class Crawler {
         log.info(String.format("Saving document with content: %s", scrapedDocument.getContent().toString()));
         ExportDocument exportDocument = mapper.scrapedDocumentToCsvExportDocument(scrapedDocument);
 
-        FutureTask<Boolean> task = new FutureTask<>(() -> IOManager.writeFile(String.format("%s.%s", exportDocument.getFilename(), exportDocument.getFileExtension()), exportDocument.getContent()));
+        FutureTask<Boolean> task = new FutureTask<>(() -> IOManager.writeFile(String.format("%s.%s", exportDocument.getFilename(), exportDocument.getFileExtension()), exportDocument.getContent(), config.getOutputFileDirectory()));
         task.run();
     }
 

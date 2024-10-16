@@ -40,7 +40,7 @@ public class CrawlerWorker extends Thread {
     public void run() {
         while (true) {
             String url = urlSupplier.get();
-            if (url == null){
+            if (url == null) {
                 break;
             }
             log.info(String.format("Worker: %d parsing url: %s", Thread.currentThread().threadId(), url));
@@ -77,7 +77,8 @@ public class CrawlerWorker extends Thread {
     private void extractTraversalUrls(Document document) {
         String xPathTraversalExpression = xPaths.get(Constants.traversalXpathKeyword);
         if (xPathTraversalExpression == null) {
-            throw new RuntimeException(String.format("Mandatory key '%s' missing!", Constants.traversalXpathKeyword));
+            log.info("No traversal expression specified for worker.");
+            return;
         }
         document.selectXpath(xPathTraversalExpression)
                 .forEach(element -> {

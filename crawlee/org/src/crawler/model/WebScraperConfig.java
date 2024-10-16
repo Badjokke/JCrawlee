@@ -6,14 +6,11 @@ public class WebScraperConfig {
     private int politeness;
     private String rootPage;
     private int workerCount;
-    private Map<String, String> xpaths;
+    private String outputFilePrefix;
 
-    public WebScraperConfig(int politeness, String rootPage, int workerCount, Map<String, String> xpaths) {
-        this.politeness = politeness;
-        this.rootPage = rootPage;
-        this.workerCount = workerCount;
-        this.xpaths = xpaths;
-    }
+
+    private String outputFileDirectory;
+    private Map<String, String> xpaths;
 
     // Getters and Setters
     public int getPoliteness() {
@@ -48,12 +45,30 @@ public class WebScraperConfig {
         this.xpaths = xpaths;
     }
 
+    public String getOutputFilePrefix() {
+        return outputFilePrefix;
+    }
+
+    public void setOutputFilePrefix(String outputFilePrefix) {
+        this.outputFilePrefix = outputFilePrefix;
+    }
+
+    public String getOutputFileDirectory() {
+        return outputFileDirectory;
+    }
+
+    public void setOutputFileDirectory(String outputFileDirectory) {
+        this.outputFileDirectory = outputFileDirectory;
+    }
+
     @Override
     public String toString() {
         return "WebScraperConfig{" +
                 "politeness=" + politeness +
                 ", rootPage='" + rootPage + '\'' +
                 ", workerCount=" + workerCount +
+                ", outputFilePrefix=" + outputFilePrefix +
+                ", outputFileDirectory=" + outputFileDirectory +
                 ", xpaths=" + xpaths +
                 '}';
     }
