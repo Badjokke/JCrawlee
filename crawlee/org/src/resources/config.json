@@ -4,7 +4,7 @@
     "rootPage": "https://www.finep.cz/cs/vyhledavani?page=1",
     "workerCount": 2,
     "outputFilePrefix": "finep",
-    "outputFileDirectory": "finep",
+    "outputFileDirectory": "finep_csv",
     "xpaths": {
       "traverse_expression": "//ul[@class='pagination']/li/a",
       "flat_number": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-6']/strong",
@@ -22,7 +22,7 @@
     "rootPage": "https://www.trigema.cz/cs/nove-byty-praha/",
     "workerCount": 1,
     "outputFilePrefix": "trigema",
-    "outputFileDirectory": "trigema",
+    "outputFileDirectory": "trigema_csv",
     "xpaths": {
       "location": "//table[@id='price-list']//tr[@data-project]//td[1]",
       "project_name": "//table[@id='price-list']//tr[@data-project]//td[2]",
@@ -35,6 +35,24 @@
       "move_in_available (quarterly)": "//table[@id='price-list']//tr[@data-project]//td[9]",
       "availability_status" : "//table[@id='price-list']//tr[@data-project]//td[10]/span[@class='d-none']",
       "plan (URL)": "//table[@id='price-list']//tr[@data-project]//td[11]/a"
+    }
+  },
+  {
+    "politeness": "1500",
+    "rootPage": "https://sekyragroup.cz/units/?page=1&limit=1000",
+    "workerCount": 1,
+    "outputFilePrefix": "sekyra",
+    "outputFileDirectory": "sekyra_csv",
+    "xpaths": {
+      "project_name": "//tbody[@class='units-body']//td[2]",
+      "flat_number": "//tbody[@class='units-body']//td[1]",
+      "floor": "//tbody[@class='units-body']//td[5]",
+      "disposition": "//tbody[@class='units-body']//td[3]",
+      "area (m2)": "//tbody[@class='units-body']//td[4]",
+      "accessories": "//tbody[@class='units-body']//td[6]",
+      "accessories_area": "//tbody[@class='units-body']//td[7]",
+      "price (CZK)": "//tbody[@class='units-body']//td[8]",
+      "availability_status" : "//tbody[@class='units-body']//td[9]"
     }
   }
 ]
