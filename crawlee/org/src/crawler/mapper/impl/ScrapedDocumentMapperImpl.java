@@ -11,6 +11,12 @@ import java.util.Set;
 
 public class ScrapedDocumentMapperImpl implements ScrapedDocumentMapper {
 
+    private final String outputFilePrefix;
+
+    public ScrapedDocumentMapperImpl(String outputFilePrefix) {
+        this.outputFilePrefix = outputFilePrefix;
+    }
+
     private int getRowCount(Map<String, List<String>> content) {
         Set<String> columns = content.keySet();
         int rowCount = 0;
@@ -40,6 +46,6 @@ public class ScrapedDocumentMapperImpl implements ScrapedDocumentMapper {
             }
             walker++;
         }
-        return new CsvExportDocument("sample"+Math.random(),columns, csvRows);
+        return new CsvExportDocument(outputFilePrefix + Math.random(), columns, csvRows);
     }
 }
