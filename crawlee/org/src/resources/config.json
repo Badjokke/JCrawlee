@@ -36,5 +36,22 @@
       "availability_status" : "//table[@id='price-list']//tr[@data-project]//td[10]/span[@class='d-none']",
       "plan (URL)": "//table[@id='price-list']//tr[@data-project]//td[11]/a"
     }
+  },
+  {
+    "politeness": "1500",
+    "rootPage": "https://residential.skanska.cz/byty?p2000=100&p2000_more=1",
+    "workerCount": 1,
+    "outputFilePrefix": "skanska",
+    "outputFileDirectory": "skanska_storage",
+    "xpaths": {
+      "flat_number": "//table[starts-with(@class,'apartments')]//tr//td[7]",
+      "floor": "//table[starts-with(@class,'apartments')]//tr//td[5]",
+      "disposition": "//table[starts-with(@class,'apartments')]//tr//td[1]",
+      "area (m2)": "//table[starts-with(@class,'apartments')]//tr//td[4]",
+      "price (CZK)": "//table[starts-with(@class,'apartments')]//tr//td[3]",
+      "move_in_available (year)": "//table[starts-with(@class,'apartments')]//tr//td[6]",
+      "availability_status" : "//table[starts-with(@class,'apartments')]//tr//td[2]/div/div/@title",
+      "plan (URL)": "//table[starts-with(@class,'apartments')]//tr//div[@class='ap-number-content']/a"
+    }
   }
 ]
