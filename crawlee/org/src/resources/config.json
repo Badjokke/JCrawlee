@@ -39,6 +39,24 @@
   },
   {
     "politeness": "1500",
+    "rootPage": "https://sekyragroup.cz/units/?page=1&limit=1000",
+    "workerCount": 1,
+    "outputFilePrefix": "sekyra",
+    "outputFileDirectory": "sekyra_csv",
+    "xpaths": {
+      "project_name": "//tbody[@class='units-body']//td[2]",
+      "flat_number": "//tbody[@class='units-body']//td[1]",
+      "floor": "//tbody[@class='units-body']//td[5]",
+      "disposition": "//tbody[@class='units-body']//td[3]",
+      "area (m2)": "//tbody[@class='units-body']//td[4]",
+      "accessories": "//tbody[@class='units-body']//td[6]",
+      "accessories_area": "//tbody[@class='units-body']//td[7]",
+      "price (CZK)": "//tbody[@class='units-body']//td[8]",
+      "availability_status" : "//tbody[@class='units-body']//td[9]"
+    }
+  },
+  {
+    "politeness": "1500",
     "rootPage": "https://residential.skanska.cz/byty?p2000=100&p2000_more=1",
     "workerCount": 1,
     "outputFilePrefix": "skanska",
