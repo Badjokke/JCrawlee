@@ -4,7 +4,7 @@
     "rootPage": "https://www.finep.cz/cs/vyhledavani?page=1",
     "workerCount": 2,
     "outputFilePrefix": "finep",
-    "outputFileDirectory": "finep",
+    "outputFileDirectory": "finep_storage",
     "xpaths": {
       "traverse_expression": "//ul[@class='pagination']/li/a",
       "flat_number": "//div[@id='item-list']/div[starts-with(@class,'item-tiles')]/div[@class='grid']/div[@class='g-12 m-6']//div[@class='g-6']/strong",
@@ -22,7 +22,7 @@
     "rootPage": "https://www.trigema.cz/cs/nove-byty-praha/",
     "workerCount": 1,
     "outputFilePrefix": "trigema",
-    "outputFileDirectory": "trigema",
+    "outputFileDirectory": "trigema_storage",
     "xpaths": {
       "location": "//table[@id='price-list']//tr[@data-project]//td[1]",
       "project_name": "//table[@id='price-list']//tr[@data-project]//td[2]",
@@ -33,7 +33,7 @@
       "accessories": "//table[@id='price-list']//tr[@data-project]//td[7]",
       "price (CZK)": "//table[@id='price-list']//tr[@data-project]//td[8]",
       "move_in_available (quarterly)": "//table[@id='price-list']//tr[@data-project]//td[9]",
-      "availability_status" : "//table[@id='price-list']//tr[@data-project]//td[10]/span[@class='d-none']",
+      "availability_status": "//table[@id='price-list']//tr[@data-project]//td[10]/span[@class='d-none']",
       "plan (URL)": "//table[@id='price-list']//tr[@data-project]//td[11]/a"
     }
   },
@@ -50,7 +50,7 @@
       "area (m2)": "//table[starts-with(@class,'apartments')]//tr//td[4]",
       "price (CZK)": "//table[starts-with(@class,'apartments')]//tr//td[3]",
       "move_in_available (year)": "//table[starts-with(@class,'apartments')]//tr//td[6]",
-      "availability_status" : "//table[starts-with(@class,'apartments')]//tr//td[2]/div/div/@title",
+      "availability_status": "//table[starts-with(@class,'apartments')]//tr//td[2]/div/div",
       "plan (URL)": "//table[starts-with(@class,'apartments')]//tr//div[@class='ap-number-content']/a"
     }
   }
