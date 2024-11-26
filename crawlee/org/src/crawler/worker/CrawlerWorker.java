@@ -5,10 +5,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.src.crawler.constants.Constants;
+import org.src.common.constants.Constants;
 import org.src.crawler.model.ScrapedDocument;
 import org.src.crawler.util.JsoupXpathUtil;
-import org.src.crawler.util.SetsUtil;
+import org.src.common.util.SetsUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -32,7 +32,7 @@ public class CrawlerWorker extends Thread {
         this.urlSupplier = urlSupplier;
         this.documentConsumer = documentConsumer;
         this.urlConsumer = urlConsumer;
-        keys = SetsUtil.difference(Constants.xPathKeywords, xPaths.keySet());
+        keys = SetsUtil.difference(Constants.X_PATH_KEYWORDS, xPaths.keySet());
     }
 
 
@@ -75,7 +75,7 @@ public class CrawlerWorker extends Thread {
     }
 
     private void extractTraversalUrls(Document document) {
-        String xPathTraversalExpression = xPaths.get(Constants.traversalXpathKeyword);
+        String xPathTraversalExpression = xPaths.get(Constants.TRAVERSAL_XPATH_KEYWORD);
         if (xPathTraversalExpression == null) {
             log.info("No traversal expression specified for worker.");
             return;

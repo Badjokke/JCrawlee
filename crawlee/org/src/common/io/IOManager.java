@@ -1,6 +1,6 @@
-package org.src.crawler.io;
+package org.src.common.io;
 
-import org.src.crawler.constants.Constants;
+import org.src.common.constants.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +21,7 @@ public class IOManager {
     public static boolean createDocumentStorage(boolean rewrite) {
         log.info("Creating document storage2");
         try {
-            return createFile(rewrite, Constants.storageRoot);
+            return createFile(rewrite, Constants.STORAGE_ROOT);
         } catch (IOException exception) {
             log.warning(String.format("Failed to create document storage: %s", exception.getMessage()));
             exception.printStackTrace();
@@ -42,7 +42,7 @@ public class IOManager {
     }
 
     public static boolean writeFile(String path, byte[] content, String subDirectory) {
-        String storage = subDirectory == null ? Constants.storageRoot : Constants.storageRoot + "/" + subDirectory;
+        String storage = subDirectory == null ? Constants.STORAGE_ROOT : Constants.STORAGE_ROOT + "/" + subDirectory;
         File storageFile = new File(storage);
         if (!storageFile.exists()) {
             boolean mkdir = storageFile.mkdirs();

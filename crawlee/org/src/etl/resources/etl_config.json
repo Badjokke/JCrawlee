@@ -1,0 +1,63 @@
+[
+  {
+    "url" : "https://www.yit.cz/api/v1/productsearch/apartments",
+    "restEndpointConfig": {
+      "method": "POST",
+      "requestBody":{
+        "PageSize": 20,
+        "StartPage": 0,
+        "PageId": 45294,
+        "SiteId": "yit.cz",
+        "Filter": {
+          "Field": "Locale",
+          "Value": "en",
+          "Operator": "Equals",
+          "AndConditions": [
+            {
+              "Field": "ProjectPublish",
+              "Value": true,
+              "Operator": "Equals",
+              "AndConditions": [],
+              "OrConditions": []
+            },
+            {
+              "Field": "IsAvailable",
+              "Value": true,
+              "Operator": "Equals",
+              "AndConditions": [],
+              "OrConditions": []
+            },
+            {
+              "Field": "ProductItemForSale",
+              "Value": true,
+              "Operator": "Equals",
+              "AndConditions": [],
+              "OrConditions": []
+            },
+            {
+              "Field": "AreaIds",
+              "Value": "citys59n-f76p-86od-s65f72qpg96t",
+              "Operator": "Any",
+              "AndConditions": [],
+              "OrConditions": []
+            },
+            {
+              "Field": "BuildingTypeKey",
+              "Value": [
+                "RowHouse",
+                "BlockOfFlats",
+                "SemiDetachedHouse",
+                "DetachedHouse",
+                "TownHouse"
+              ],
+              "Operator": "In",
+              "AndConditions": [],
+              "OrConditions": []
+            }
+          ],
+          "OrConditions": []
+        }
+      }
+    }
+  }
+]
