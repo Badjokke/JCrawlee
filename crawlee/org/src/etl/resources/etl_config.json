@@ -1,9 +1,9 @@
 [
   {
-    "url" : "https://www.yit.cz/api/v1/productsearch/apartments",
+    "url": "https://www.yit.cz/api/v1/productsearch/apartments",
     "restEndpointConfig": {
       "method": "POST",
-      "requestBody":{
+      "body": {
         "PageSize": 20,
         "StartPage": 0,
         "PageId": 45294,
@@ -58,6 +58,9 @@
           "OrConditions": []
         }
       }
+    },
+    "projection": {
+      "ApartmentNumber" : "apartment number"
     }
   }
 ]

@@ -1,10 +1,12 @@
 package org.src.etl;
 
-import org.src.etl.model.YitEtlConfig;
+
+import org.src.etl.model.RestEtlConfig;
 
 public class FancyEtl {
     public static void main(String[] args) {
-        YitEtlConfig[] yitEtlConfigurations = ConfigLoader.loadEtlConfig("etl_config.json");
-        System.out.println("hello world");
+        RestEtlConfig[] yitEtlConfigurations = ConfigLoader.loadEtlConfig("etl_config.json");
+        AbstractRestEtl yit = new YitRestEtl(yitEtlConfigurations[0]);
+        yit.extractTransformLoad();
     }
 }
