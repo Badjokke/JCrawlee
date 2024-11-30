@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.FutureTask;
 import java.util.function.Function;
@@ -69,27 +70,33 @@ public class YitRestEtl extends AbstractRestEtl {
         return buildings.stream().map(buildingEntity -> ProjectionMapper.mapStrictProjection(buildingEntity, this.getRestEtlConfig().projection())).collect(Collectors.toList());
     }
 
-    private void saveExportFile(ExportDocument exportDocument) {
+    private void saveExportDocument(ExportDocument exportDocument) {
         log.info(String.format("%s.%s", exportDocument.getFilename(), exportDocument.getFileExtension()));
         FutureTask<Boolean> task = new FutureTask<>(() -> IOManager.writeFile(String.format("%s.%s", exportDocument.getFilename(), exportDocument.getFileExtension()), exportDocument.getContent(), this.getRestEtlConfig().outputFileDirectory()));
         task.run();
     }
 
-    private ExportDocument createExportDocument(BuildingEntity entity) {
-        Map<String, Object> fields = entity.Fields();
-        String[] content = new String[fields.keySet().size()];
-        int i = 0;
-        for (String key : fields.keySet())
-            content[i++] = fields.get(key).toString();
+    private ExportDocument createExportDocument(List<BuildingEntity> entities) {
+        Set<String> columns = entities.get(0).Fields().keySet();
+        List<String[]> contentWrapper = new ArrayList<>();
+        for (BuildingEntity entity : entities) {
+            Map<String, Object> fields = entity.Fields();
+            String[] content = new String[columns.size()];
+            int i = 0;
+            for (String key : columns) {
+                Object value = fields.get(key);
+                if (value == null) {
+                    log.finest(String.format("Null value for key: %s", key));
+                    continue;
+                }
+                content[i++] = value.toString();
+            }
 
-        return new CsvExportDocument(this.getRestEtlConfig().outputFilePrefix() + Math.random(), fields.keySet(), new ArrayList<>() {{
-            add(content);
-        }});
+            contentWrapper.add(content);
+        }
+        return new CsvExportDocument(this.getRestEtlConfig().outputFilePrefix() + Math.random(), columns, contentWrapper);
     }
 
-    private List<ExportDocument> createExportFile(List<BuildingEntity> entities) {
-        return entities.stream().map(this::createExportDocument).collect(Collectors.toList());
-    }
 
     private Runnable extractYitData() {
         return () -> {
@@ -131,7 +138,7 @@ public class YitRestEtl extends AbstractRestEtl {
                 if (response.Hits() == null) {
                     return;
                 }
-                createExportFile(transform.apply(response.Hits())).stream().forEach(this::saveExportFile);
+                saveExportDocument(createExportDocument(transform.apply(response.Hits())));
             }
         };
     }
