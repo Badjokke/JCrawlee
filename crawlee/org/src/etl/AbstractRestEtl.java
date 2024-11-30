@@ -1,6 +1,5 @@
 package org.src.etl;
 
-import org.src.common.model.export.ExportDocument;
 import org.src.etl.model.RestEtlConfig;
 
 public abstract class AbstractRestEtl {
@@ -14,6 +13,6 @@ public abstract class AbstractRestEtl {
         return this.restEtlConfig;
     }
 
-    public abstract ExportDocument extractTransformLoad();
+    public abstract void extractAndSaveTransformedData();
 
 }

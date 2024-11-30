@@ -59,8 +59,11 @@
         }
       }
     },
+    "useOnlyProjection": true,
     "projection": {
-      "ApartmentNumber" : "apartment number"
-    }
+      "ApartmentNumber": "apartment number"
+    },
+    "outputFilePrefix": "yit",
+    "outputFileDirectory": "yit_storage"
   }
 ]
