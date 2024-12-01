@@ -61,7 +61,14 @@
     },
     "useOnlyProjection": true,
     "projection": {
-      "ApartmentNumber": "apartment number"
+      "ApartmentNumber": "apartment number",
+      "_Url": "url",
+      "ReservationStatus": "reservation status",
+      "ApartmentSize": "apartment size (m^2)",
+      "FloorNumber": "floor number",
+      "NumberOfRooms": "number of rooms",
+      "TotalAreaSize": "total area size (m^2)",
+      "SalesPrice": "price (CZK)"
     },
     "outputFilePrefix": "yit",
     "outputFileDirectory": "yit_storage"

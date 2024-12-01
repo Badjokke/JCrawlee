@@ -91,7 +91,6 @@ public class YitRestEtl extends AbstractRestEtl {
                 }
                 content[i++] = value.toString();
             }
-
             contentWrapper.add(content);
         }
         return new CsvExportDocument(this.getRestEtlConfig().outputFilePrefix() + Math.random(), columns, contentWrapper);
