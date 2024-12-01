@@ -1,11 +1,11 @@
 package org.src.crawler;
 
-import org.src.crawler.io.IOManager;
-import org.src.crawler.mapper.ScrapedDocumentMapper;
-import org.src.crawler.mapper.impl.ScrapedDocumentMapperImpl;
+import org.src.common.io.IOManager;
+import org.src.common.mapper.ScrapedDocumentMapper;
+import org.src.common.mapper.impl.ScrapedDocumentMapperImpl;
 import org.src.crawler.model.ScrapedDocument;
 import org.src.crawler.model.WebScraperConfig;
-import org.src.crawler.model.export.ExportDocument;
+import org.src.common.model.export.ExportDocument;
 import org.src.crawler.worker.CrawlerWorker;
 
 import java.util.*;

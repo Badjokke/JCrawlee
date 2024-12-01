@@ -1,4 +1,4 @@
-package org.src.crawler.model.export;
+package org.src.common.model.export;
 
 public abstract class ExportDocument {
 

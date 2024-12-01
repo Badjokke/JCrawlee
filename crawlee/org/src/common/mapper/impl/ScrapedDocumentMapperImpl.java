@@ -1,8 +1,8 @@
-package org.src.crawler.mapper.impl;
+package org.src.common.mapper.impl;
 
-import org.src.crawler.mapper.ScrapedDocumentMapper;
+import org.src.common.mapper.ScrapedDocumentMapper;
 import org.src.crawler.model.ScrapedDocument;
-import org.src.crawler.model.export.CsvExportDocument;
+import org.src.common.model.export.CsvExportDocument;
 
 import java.util.ArrayList;
 import java.util.List;

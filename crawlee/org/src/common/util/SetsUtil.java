@@ -1,4 +1,4 @@
-package org.src.crawler.util;
+package org.src.common.util;
 
 import java.util.HashSet;
 import java.util.Iterator;

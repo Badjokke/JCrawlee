@@ -1,7 +1,7 @@
-package org.src.crawler.mapper;
+package org.src.common.mapper;
 
 import org.src.crawler.model.ScrapedDocument;
-import org.src.crawler.model.export.CsvExportDocument;
+import org.src.common.model.export.CsvExportDocument;
 
 public interface ScrapedDocumentMapper {
 
