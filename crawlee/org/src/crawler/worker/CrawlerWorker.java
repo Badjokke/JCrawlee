@@ -11,6 +11,7 @@ import org.src.crawler.util.JsoupXpathUtil;
 import org.src.common.util.SetsUtil;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;

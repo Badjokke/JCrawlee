@@ -18,7 +18,7 @@ public final class ConfigLoader {
     }
 
     public static RestEtlConfig[] loadEtlConfig(String path) {
-        File f = new File(Constants.ETL_CONFIG_PATH);
+        File f = new File(path);
         if (!f.exists()) {
             log.warning(String.format("Config file: %s not found\n", path));
             return null;
